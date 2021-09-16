@@ -181,7 +181,6 @@ void HAL_DMA2D_MspDeInit(DMA2D_HandleTypeDef* hdma2d)
 */
 void HAL_DSI_MspInit(DSI_HandleTypeDef* hdsi)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(hdsi->Instance==DSI)
   {
   /* USER CODE BEGIN DSI_MspInit 0 */
@@ -189,18 +188,6 @@ void HAL_DSI_MspInit(DSI_HandleTypeDef* hdsi)
   /* USER CODE END DSI_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_DSI_CLK_ENABLE();
-
-    __HAL_RCC_GPIOJ_CLK_ENABLE();
-    /**DSIHOST GPIO Configuration
-    PJ2     ------> DSIHOST_TE
-    */
-    GPIO_InitStruct.Pin = DSI_TE_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF13_DSI;
-    HAL_GPIO_Init(DSI_TE_GPIO_Port, &GPIO_InitStruct);
-
     /* DSI interrupt Init */
     HAL_NVIC_SetPriority(DSI_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(DSI_IRQn);
@@ -226,11 +213,6 @@ void HAL_DSI_MspDeInit(DSI_HandleTypeDef* hdsi)
   /* USER CODE END DSI_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_DSI_CLK_DISABLE();
-
-    /**DSIHOST GPIO Configuration
-    PJ2     ------> DSIHOST_TE
-    */
-    HAL_GPIO_DeInit(DSI_TE_GPIO_Port, DSI_TE_Pin);
 
     /* DSI interrupt DeInit */
     HAL_NVIC_DisableIRQ(DSI_IRQn);
@@ -578,7 +560,7 @@ static void HAL_FMC_MspInit(void){
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = D23_Pin|D21_Pin|D22_Pin|SDNE0_Pin
-                          |SDCKE0_Pin|D20_Pin|D17_Pin|D19_Pin
+                          |GPIO_PIN_2|D20_Pin|D17_Pin|D19_Pin
                           |D16_Pin|D18_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -698,7 +680,7 @@ static void HAL_FMC_MspDeInit(void){
                           |A7_Pin|A8_Pin|SDNMT48LC4M32B2B5_6A_RAS_RAS___Pin);
 
   HAL_GPIO_DeInit(GPIOH, D23_Pin|D21_Pin|D22_Pin|SDNE0_Pin
-                          |SDCKE0_Pin|D20_Pin|D17_Pin|D19_Pin
+                          |GPIO_PIN_2|D20_Pin|D17_Pin|D19_Pin
                           |D16_Pin|D18_Pin);
 
   HAL_GPIO_DeInit(SDNWE_GPIO_Port, SDNWE_Pin);
